@@ -36,7 +36,7 @@ function loadState() {
             if (loaded && typeof loaded.portfolio === 'object') {
                 // Validate portfolio values
                 for (const product in loaded.portfolio) {
-                    if (state.portfolio.hasOwnProperty(product) && 
+                    if (Object.hasOwn(state.portfolio, product) && 
                         typeof loaded.portfolio[product] === 'number' && 
                         loaded.portfolio[product] >= 0) {
                         state.portfolio[product] = loaded.portfolio[product];
@@ -44,7 +44,16 @@ function loadState() {
                 }
             }
             if (loaded && Array.isArray(loaded.transactions)) {
-                state.transactions = loaded.transactions;
+                // Validate each transaction
+                state.transactions = loaded.transactions.filter(t => 
+                    t && 
+                    typeof t.product === 'string' &&
+                    typeof t.type === 'string' &&
+                    typeof t.quantity === 'number' &&
+                    typeof t.price === 'number' &&
+                    typeof t.total === 'number' &&
+                    typeof t.time === 'string'
+                );
             }
         } catch (e) {
             // If localStorage is corrupted, start fresh
