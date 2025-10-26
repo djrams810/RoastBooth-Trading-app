@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoastBooth Trading App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>☕ RoastBooth Trading</h1>
+            <p class="tagline">Premium Coffee Bean Trading Platform</p>
+        </header>
+
+        <div class="dashboard">
+            <div class="balance-section">
+                <h2>Account Balance</h2>
+                <div class="balance">$<span id="balance">10000.00</span></div>
+            </div>
+
+            <div class="market-section">
+                <h2>Coffee Market</h2>
+                <div class="products">
+                    <div class="product-card" data-product="arabica">
+                        <h3>Arabica Beans</h3>
+                        <p class="price">$<span class="product-price">25.50</span>/lb</p>
+                        <div class="trade-controls">
+                            <input type="number" class="quantity" min="1" value="1" placeholder="Quantity">
+                            <button class="btn-buy" onclick="trade('arabica', 'buy')">Buy</button>
+                            <button class="btn-sell" onclick="trade('arabica', 'sell')">Sell</button>
+                        </div>
+                        <p class="owned">Owned: <span class="owned-amount">0</span> lbs</p>
+                    </div>
+
+                    <div class="product-card" data-product="robusta">
+                        <h3>Robusta Beans</h3>
+                        <p class="price">$<span class="product-price">18.75</span>/lb</p>
+                        <div class="trade-controls">
+                            <input type="number" class="quantity" min="1" value="1" placeholder="Quantity">
+                            <button class="btn-buy" onclick="trade('robusta', 'buy')">Buy</button>
+                            <button class="btn-sell" onclick="trade('robusta', 'sell')">Sell</button>
+                        </div>
+                        <p class="owned">Owned: <span class="owned-amount">0</span> lbs</p>
+                    </div>
+
+                    <div class="product-card" data-product="liberica">
+                        <h3>Liberica Beans</h3>
+                        <p class="price">$<span class="product-price">32.00</span>/lb</p>
+                        <div class="trade-controls">
+                            <input type="number" class="quantity" min="1" value="1" placeholder="Quantity">
+                            <button class="btn-buy" onclick="trade('liberica', 'buy')">Buy</button>
+                            <button class="btn-sell" onclick="trade('liberica', 'sell')">Sell</button>
+                        </div>
+                        <p class="owned">Owned: <span class="owned-amount">0</span> lbs</p>
+                    </div>
+
+                    <div class="product-card" data-product="excelsa">
+                        <h3>Excelsa Beans</h3>
+                        <p class="price">$<span class="product-price">28.25</span>/lb</p>
+                        <div class="trade-controls">
+                            <input type="number" class="quantity" min="1" value="1" placeholder="Quantity">
+                            <button class="btn-buy" onclick="trade('excelsa', 'buy')">Buy</button>
+                            <button class="btn-sell" onclick="trade('excelsa', 'sell')">Sell</button>
+                        </div>
+                        <p class="owned">Owned: <span class="owned-amount">0</span> lbs</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portfolio-section">
+                <h2>Portfolio Value</h2>
+                <div class="portfolio-value">$<span id="portfolio-value">0.00</span></div>
+                <div class="total-value">
+                    <h3>Total Net Worth</h3>
+                    <div class="net-worth">$<span id="net-worth">10000.00</span></div>
+                </div>
+            </div>
+
+            <div class="history-section">
+                <h2>Transaction History</h2>
+                <div id="transaction-list" class="transaction-list">
+                    <p class="no-transactions">No transactions yet. Start trading!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="message" id="message"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
