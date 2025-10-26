@@ -27,10 +27,29 @@ function init() {
 function loadState() {
     const savedState = localStorage.getItem('roastboothState');
     if (savedState) {
-        const loaded = JSON.parse(savedState);
-        state.balance = loaded.balance;
-        state.portfolio = loaded.portfolio;
-        state.transactions = loaded.transactions || [];
+        try {
+            const loaded = JSON.parse(savedState);
+            // Validate loaded data
+            if (loaded && typeof loaded.balance === 'number' && loaded.balance >= 0) {
+                state.balance = loaded.balance;
+            }
+            if (loaded && typeof loaded.portfolio === 'object') {
+                // Validate portfolio values
+                for (const product in loaded.portfolio) {
+                    if (state.portfolio.hasOwnProperty(product) && 
+                        typeof loaded.portfolio[product] === 'number' && 
+                        loaded.portfolio[product] >= 0) {
+                        state.portfolio[product] = loaded.portfolio[product];
+                    }
+                }
+            }
+            if (loaded && Array.isArray(loaded.transactions)) {
+                state.transactions = loaded.transactions;
+            }
+        } catch (e) {
+            // If localStorage is corrupted, start fresh
+            console.warn('Failed to load saved state, starting fresh');
+        }
     }
 }
 
@@ -106,6 +125,13 @@ function updateTransactionHistory() {
 
 // Execute a trade
 function trade(product, type) {
+    // Validate product parameter against whitelist
+    const validProducts = ['arabica', 'robusta', 'liberica', 'excelsa'];
+    if (!validProducts.includes(product)) {
+        showMessage('Invalid product', 'error');
+        return;
+    }
+    
     const card = document.querySelector(`.product-card[data-product="${product}"]`);
     const quantityInput = card.querySelector('.quantity');
     const quantity = parseFloat(quantityInput.value);
@@ -174,8 +200,15 @@ function showMessage(text, type) {
 }
 
 // Simulate price fluctuations
+let priceFluctuationInterval = null;
+
 function startPriceFluctuation() {
-    setInterval(() => {
+    // Clear any existing interval
+    if (priceFluctuationInterval) {
+        clearInterval(priceFluctuationInterval);
+    }
+    
+    priceFluctuationInterval = setInterval(() => {
         for (const product in state.prices) {
             const change = (Math.random() - 0.5) * 2; // -1 to +1
             state.prices[product] = Math.max(5, state.prices[product] + change);
@@ -184,5 +217,16 @@ function startPriceFluctuation() {
     }, 5000); // Update every 5 seconds
 }
 
+// Cleanup function to stop price fluctuations
+function stopPriceFluctuation() {
+    if (priceFluctuationInterval) {
+        clearInterval(priceFluctuationInterval);
+        priceFluctuationInterval = null;
+    }
+}
+
 // Initialize app when page loads
 document.addEventListener('DOMContentLoaded', init);
+
+// Clean up when page unloads
+window.addEventListener('beforeunload', stopPriceFluctuation);
